@@ -29,17 +29,20 @@ Graph::Graph(int numberOfNodes, double edgeDensity, int rangeMin, int rangeMax) 
 				int edgeWeight = rand() % (((rangeMax + 1) - rangeMin)) + rangeMin; // generate a randome number between the minimum and maximum range
 
 				// Add an undirected edge for both nodes towards oneanother
-				// if 
+				// If the Edge already exists, then no new Edge is added 
 				(*it1)->AddEdge((*it2), edgeWeight);
 				(*it2)->AddEdge((*it1), edgeWeight);
 			}
 		}
 	}
-
 }
 
-// default destructor
+// Destructor
 Graph::~Graph() {
+	// Delete the Nodes when the Graph goes out of scope
+	for (int i = 0; i < nodes.size(); i++) {
+		delete nodes[i];
+	}
 }
 
 // Prints the adjecency matrix for this Graph, showing the existence of edges between nodes 

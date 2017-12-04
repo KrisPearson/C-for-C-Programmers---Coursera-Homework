@@ -7,7 +7,7 @@
 
 using namespace std;
 
-const int NUMBERODNODES = 10;
+const int NUMBER_OF_NODES = 10;
 
 int main() {
 
@@ -29,7 +29,7 @@ int main() {
 	cout << "Please define the edge density for the graph: ";
 	cin >> edgeDensityInput;
 
-	Graph graphData(NUMBERODNODES, edgeDensityInput, 1, 5); // Graph with 20% edge density
+	Graph graphData(NUMBER_OF_NODES, edgeDensityInput, 1, 5);
 
 	graphData.PrintAdjecencyMatrix();
 	graphData.PrintGraphData();

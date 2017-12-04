@@ -13,12 +13,9 @@ const int MAXNODECOUNT = 500;
 struct Node;
 
 struct Edge {
-	// the Node at which this edge starts and ends respectively (i.e the direction of the edge)
-	const Node *startNode;
-	const Node *endNode;
-	
-	//the cost to travel between nodes along this edge
-	int edgeWeight;
+public:
+
+
 
 	/*
 	Edge(Node* startNode, Node* endNode, int edgeWeight) {
@@ -28,7 +25,26 @@ struct Edge {
 	}
 	*/
 
+
 	Edge(const Node* startNode, const Node* endNode, int edgeWeight) :startNode(startNode), endNode(endNode), edgeWeight(edgeWeight) {}
+
+	inline const int GetEndNodeIndex() { return endNode->GetIndex(); }
+
+	inline const int GetEdgeWeight() { return edgeWeight; }
+
+	inline friend bool operator==(const Edge& edge1, const Edge& edge2) {
+		return (edge1.endNode == edge2.endNode &&
+			edge1.startNode == edge2.startNode);
+	};
+
+	private:
+
+		// the Node at which this edge starts and ends respectively (i.e the direction of the edge)
+		const Node *startNode;
+		const Node *endNode;
+
+		//the cost to travel between nodes along this edge
+		int edgeWeight;
 
 };
 
@@ -36,14 +52,13 @@ struct Edge {
 		//TODO: consider using friend bool operator== () 
 // Overload the == operator for comparing Edge structs for equality
 // Notice, we don't compare the weight. This is because no two edges should point between the same two Nodes, so the weight neeed not be considered.
-inline bool operator==(const Edge& edge1, const Edge& edge2) {
-	return (edge1.endNode == edge2.endNode &&
-		edge1.startNode == edge2.startNode);
-};
+
 
 
 struct Node {
 public:
+
+	Node(int index):index (index) {}
 
 	inline int GetNumberOfEdges() { return adjecentEdges.size(); }
 
@@ -80,18 +95,6 @@ public:
 
 		}
 		else return false;
-
-		/* DEPRECATED - 
-		Edge tempEdgeToDelete(fromNode, toNode, 0); // make a temporary local Edge to use in the remove function
-		//Find new end iterator, caching said iterator 
-		vector<Edge>::iterator newEnd = std::remove(adjecentEdges.begin(), adjecentEdges.end(), tempEdgeToDelete);
-		if (newEnd != adjecentEdges.end()) {
-			//Erase the "removed" elements.
-			adjecentEdges.erase(newEnd, adjecentEdges.end());
-			return true;
-		}
-		else return false;
-		*/
 	}
 
 	// Compares this node and the toNode to see if an edge exists between them. If so, then returns true.
@@ -109,34 +112,33 @@ public:
 			}
 			return true;
 		}
-
-		/* DEPRECATED
-		if (find(adjecentEdges.begin(), adjecentEdges.end(), Edge(this, toNode, 0)) != adjecentEdges.end()) {
-			if (edgeIndex != nullptr) {
-				//edgeIndex = std::distance(adjecentEdges.begin(), it);
-			}
-			return true;
-		}
-		else return false;
-		*/
 	}
 
-	int GetEdgeWeight(Node* endNode) {
+	int GetEdgeWeight(const Node* endNode) {
 		if (CheckForEdge(endNode)) {
 
 		}
 		else return 0; // TODO: consider - could return an unreasonably large number here?
 	}
 
-	Node(int index) {
-		this->index = index;
+	// Returns a multidimensional vector containing the index ID of the neighbour on the graph and the weight of the edge
+	// This ID can then be used to access the neighbouring Node and its values.
+	vector< vector<int> > GetAllNeighboursIndicesAndWeight() {
+		vector< vector<int> > returnVector;
+		for (vector<Edge>::iterator edgeIt = adjecentEdges.begin(); edgeIt != adjecentEdges.end(); ++edgeIt) {		
+			returnVector.push_back [edgeIt->GetEndNodeIndex()][edgeIt->GetEdgeWeight()];
+		}
+		return returnVector;
 	}
 
-	int GetIndex() { return index; }
+	// Returns the index value of this node
+	inline const int GetIndex() const { return index; }
+
+
 
 private:
 	// the index value asociated with this node
-	int index;
+	const int index;
 
 	// stores all Edges associated with this Node
 	vector<Edge> adjecentEdges;
@@ -150,8 +152,7 @@ public:
 	~Graph();
 
 	// Uses a matrix, as opposed to a list due to the relatively low density
-	vector <vector<int> > adjecencyMatrix;
-
+	// vector <vector<int> > adjecencyMatrix;
 
 	// Returns the edge weight between the nodes
 	int GetEdgeValue(int n1, int n2) { return nodes[n1]->GetEdgeWeight(nodes[n2]); };
@@ -189,7 +190,6 @@ private:
 		for (vector<Node*>::iterator it1 = nodes.begin(); it1 != nodes.end(); ++it1) {
 			int noToAdd = 0;
 			noToAdd = (*it1)->GetNumberOfEdges();
-			cout << "noToAdd = " << noToAdd << endl;
 
 			numberOfEdges += noToAdd;
 		}
