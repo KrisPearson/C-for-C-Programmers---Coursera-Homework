@@ -1,7 +1,7 @@
-﻿  AssignmentTwo_DijkstrasAlgorithm.cpp
+﻿  Graph.cpp
+s:\github\c++forc_courserahomework\c-for-c-programmers---coursera-homework\assignmenttwo_dijkstrasalgorithm\assignmenttwo_dijkstrasalgorithm\graph.cpp(51): warning C4018: '<': signed/unsigned mismatch
+s:\github\c++forc_courserahomework\c-for-c-programmers---coursera-homework\assignmenttwo_dijkstrasalgorithm\assignmenttwo_dijkstrasalgorithm\graph.cpp(91): warning C4018: '<': signed/unsigned mismatch
+  AssignmentTwo_DijkstrasAlgorithm.cpp
   Generating Code...
-  Compiling...
-  Graph.cpp
-s:\github\c++forc_courserahomework\c-for-c-programmers---coursera-homework\assignmenttwo_dijkstrasalgorithm\assignmenttwo_dijkstrasalgorithm\graph.cpp(80): warning C4018: '<': signed/unsigned mismatch
-  Generating Code...
+  LINK : S:\GitHub\C++forC_CourseraHomework\C-for-C-Programmers---Coursera-Homework\AssignmentTwo_DijkstrasAlgorithm\Debug\AssignmentTwo_DijkstrasAlgorithm.exe not found or not built by the last incremental link; performing full link
   AssignmentTwo_DijkstrasAlgorithm.vcxproj -> S:\GitHub\C++forC_CourseraHomework\C-for-C-Programmers---Coursera-Homework\AssignmentTwo_DijkstrasAlgorithm\Debug\AssignmentTwo_DijkstrasAlgorithm.exe

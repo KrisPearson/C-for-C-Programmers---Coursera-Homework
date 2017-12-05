@@ -14,21 +14,18 @@ struct Node;
 
 struct Edge {
 public:
-
-
-
 	/*
 	Edge(Node* startNode, Node* endNode, int edgeWeight) {
-		this->startNode = startNode;
-		this->endNode = endNode;
-		this->edgeWeight = edgeWeight;
+	this->startNode = startNode;
+	this->endNode = endNode;
+	this->edgeWeight = edgeWeight;
 	}
 	*/
 
 
 	Edge(const Node* startNode, const Node* endNode, int edgeWeight) :startNode(startNode), endNode(endNode), edgeWeight(edgeWeight) {}
 
-	inline const int GetEndNodeIndex() { return endNode->GetIndex(); }
+	inline const int GetEndNodeIndex();
 
 	inline const int GetEdgeWeight() { return edgeWeight; }
 
@@ -37,34 +34,32 @@ public:
 			edge1.startNode == edge2.startNode);
 	};
 
-	private:
+private:
 
-		// the Node at which this edge starts and ends respectively (i.e the direction of the edge)
-		const Node *startNode;
-		const Node *endNode;
+	// the Node at which this edge starts and ends respectively (i.e the direction of the edge)
+	const Node *startNode;
+	const Node *endNode;
 
-		//the cost to travel between nodes along this edge
-		int edgeWeight;
+	//the cost to travel between nodes along this edge
+	int edgeWeight;
 
 };
 
 
-		//TODO: consider using friend bool operator== () 
+//TODO: consider using friend bool operator== () 
 // Overload the == operator for comparing Edge structs for equality
 // Notice, we don't compare the weight. This is because no two edges should point between the same two Nodes, so the weight neeed not be considered.
-
-
 
 struct Node {
 public:
 
-	Node(int index):index (index) {}
+	Node(int index) :index(index) {}
 
 	inline int GetNumberOfEdges() { return adjecentEdges.size(); }
 
 	// If one deoes not exists, then adds an Edge pointing from the fromNode to the toNode, with a given weight value.
 	// will return true if an edge did not already exist, and so was added. False if an edge already existed.
-	bool AddEdge( const Node* toNode, const int edgeWeight) {
+	bool AddEdge(const Node* toNode, const int edgeWeight) {
 		if (CheckForEdge(toNode)) {
 			return false; // Edge not added, as one already existed
 		}
@@ -87,7 +82,7 @@ public:
 		if (CheckForEdge(toNode, &edgeIndex)) {
 
 			// use the edgeIndex to erase the element containing the Edge
-			adjecentEdges.erase(adjecentEdges.begin() +edgeIndex);
+			adjecentEdges.erase(adjecentEdges.begin() + edgeIndex);
 
 			//Search for the edgeusing an iterator, caching said iterator.
 			//vector<Edge>::iterator newEnd = std::remove(adjecentEdges.begin(), adjecentEdges.end(), Edge(this, toNode, 0));
@@ -105,8 +100,8 @@ public:
 			return false; 	// Edge not in vector
 		}
 		else {
-				// if edgeIndex has been specified, then assign the index of the located element to it.
-			if (edgeIndex != nullptr) {			
+			// if edgeIndex has been specified, then assign the index of the located element to it.
+			if (edgeIndex != nullptr) {
 				*edgeIndex = std::distance(adjecentEdges.begin(), edgeIt);
 
 			}
@@ -121,12 +116,12 @@ public:
 		else return 0; // TODO: consider - could return an unreasonably large number here?
 	}
 
-	// Returns a multidimensional vector containing the index ID of the neighbour on the graph and the weight of the edge
+	// Returns a vector of pairs containing the index ID of the neighbour on the graph and the weight of the edge in that order
 	// This ID can then be used to access the neighbouring Node and its values.
-	vector< vector<int> > GetAllNeighboursIndicesAndWeight() {
-		vector< vector<int> > returnVector;
-		for (vector<Edge>::iterator edgeIt = adjecentEdges.begin(); edgeIt != adjecentEdges.end(); ++edgeIt) {		
-			returnVector.push_back [edgeIt->GetEndNodeIndex()][edgeIt->GetEdgeWeight()];
+	vector< pair<int, int> > GetAllNeighboursIndicesAndWeight() {
+		vector< pair<int, int> > returnVector(0);
+		for (vector<Edge>::iterator edgeIt = adjecentEdges.begin(); edgeIt != adjecentEdges.end(); ++edgeIt) {
+			returnVector.push_back(make_pair(edgeIt->GetEndNodeIndex(), edgeIt->GetEdgeWeight()));
 		}
 		return returnVector;
 	}
@@ -156,7 +151,7 @@ public:
 
 	// Returns the edge weight between the nodes
 	int GetEdgeValue(int n1, int n2) { return nodes[n1]->GetEdgeWeight(nodes[n2]); };
-	int GetEdgeValue(Node* n1, Node* n2) { return n1->GetEdgeWeight(n2);  }
+	int GetEdgeValue(Node* n1, Node* n2) { return n1->GetEdgeWeight(n2); }
 
 	// returns whether there is an edge from node n1 to node n2
 	bool Adjecent(int n1, int n2);
@@ -179,9 +174,9 @@ private:
 
 	//Performs the density equation D = (E) / (V(V -1))
 	float CalculateGraphDensity() {
-		float density = (/*2* not required due to the way edges are created in pairs*/static_cast<float>(GetNumberOfEdges()) / 2.f  ) 
-						/ (static_cast<float>(nodes.size()) * (static_cast<float>(nodes.size()) - 1.f) 
-						);
+		float density = (/*2* not required due to the way edges are created in pairs*/static_cast<float>(GetNumberOfEdges()) / 2.f)
+			/ (static_cast<float>(nodes.size()) * (static_cast<float>(nodes.size()) - 1.f)
+				);
 		return density;
 	}
 
