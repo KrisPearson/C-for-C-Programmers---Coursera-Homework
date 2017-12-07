@@ -7,7 +7,9 @@
 using namespace std;
 
 // Used to prevent large numbers of Nodes consuming too much memory
-const int MAXNODECOUNT = 500;
+const int MAX_NODE_COUNT = 500;
+
+const int INF = 9999;
 
 // forward declare the Node type
 struct Node;
@@ -25,10 +27,14 @@ public:
 
 	Edge(const Node* startNode, const Node* endNode, int edgeWeight) :startNode(startNode), endNode(endNode), edgeWeight(edgeWeight) {}
 
+	inline const class Node* GetEndNode() { return endNode; }
+	
 	inline const int GetEndNodeIndex();
 
 	inline const int GetEdgeWeight() { return edgeWeight; }
 
+	// Overload the == operator for comparing Edge structs for equality
+	// Notice, we don't compare the weight. This is because no two edges should point between the same two Nodes, so the weight neeed not be considered.
 	inline friend bool operator==(const Edge& edge1, const Edge& edge2) {
 		return (edge1.endNode == edge2.endNode &&
 			edge1.startNode == edge2.startNode);
@@ -37,18 +43,13 @@ public:
 private:
 
 	// the Node at which this edge starts and ends respectively (i.e the direction of the edge)
-	const Node *startNode;
+	const Node *startNode; // TODO: consider is this necessary? As the Edge is stored inside of the Node it is pointing to.
 	const Node *endNode;
 
 	//the cost to travel between nodes along this edge
 	int edgeWeight;
 
 };
-
-
-//TODO: consider using friend bool operator== () 
-// Overload the == operator for comparing Edge structs for equality
-// Notice, we don't compare the weight. This is because no two edges should point between the same two Nodes, so the weight neeed not be considered.
 
 struct Node {
 public:
@@ -92,6 +93,8 @@ public:
 		else return false;
 	}
 
+	inline int GetEdgeCount() { return adjecentEdges.size(); }
+
 	// Compares this node and the toNode to see if an edge exists between them. If so, then returns true.
 	// An integer can be provided to the edgeIndex pointer in order to obtain the index of a found element, if such an element is found
 	inline bool CheckForEdge(const Node* toNode, int *edgeIndex = nullptr) {
@@ -103,7 +106,6 @@ public:
 			// if edgeIndex has been specified, then assign the index of the located element to it.
 			if (edgeIndex != nullptr) {
 				*edgeIndex = std::distance(adjecentEdges.begin(), edgeIt);
-
 			}
 			return true;
 		}
@@ -122,6 +124,15 @@ public:
 		vector< pair<int, int> > returnVector(0);
 		for (vector<Edge>::iterator edgeIt = adjecentEdges.begin(); edgeIt != adjecentEdges.end(); ++edgeIt) {
 			returnVector.push_back(make_pair(edgeIt->GetEndNodeIndex(), edgeIt->GetEdgeWeight()));
+		}
+		return returnVector;
+	}
+
+	vector< pair<const Node*, int> > GetAllNeighbours() {
+		vector< pair<const Node*, int> > returnVector(0);
+		for (vector<Edge>::iterator edgeIt = adjecentEdges.begin(); edgeIt != adjecentEdges.end(); ++edgeIt) {
+			returnVector.push_back(make_pair(edgeIt->GetEndNode(), edgeIt->GetEdgeWeight()));
+
 		}
 		return returnVector;
 	}
@@ -146,15 +157,13 @@ public:
 	Graph(int numberOfNodes = 50, double edgeDensity = 0.1f, int rangeMin = 1, int rangeMax = 8);
 	~Graph();
 
-	// Uses a matrix, as opposed to a list due to the relatively low density
-	// vector <vector<int> > adjecencyMatrix;
+	inline int GetSize()  const { return nodes.size(); }
+
+	inline Node* GetNodeByIndex(const int index) const { return nodes[index]; }
 
 	// Returns the edge weight between the nodes
 	int GetEdgeValue(int n1, int n2) { return nodes[n1]->GetEdgeWeight(nodes[n2]); };
 	int GetEdgeValue(Node* n1, Node* n2) { return n1->GetEdgeWeight(n2); }
-
-	// returns whether there is an edge from node n1 to node n2
-	bool Adjecent(int n1, int n2);
 
 
 #pragma region Print Functions
@@ -174,7 +183,7 @@ private:
 
 	//Performs the density equation D = (E) / (V(V -1))
 	float CalculateGraphDensity() {
-		float density = (/*2* not required due to the way edges are created in pairs*/static_cast<float>(GetNumberOfEdges()) / 2.f)
+		float density = (2.f *static_cast<float>(GetNumberOfEdges()) / 2.f)
 			/ (static_cast<float>(nodes.size()) * (static_cast<float>(nodes.size()) - 1.f)
 				);
 		return density;

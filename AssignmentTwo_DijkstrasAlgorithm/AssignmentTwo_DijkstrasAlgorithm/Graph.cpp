@@ -25,22 +25,25 @@ Graph::Graph(int numberOfNodes, double edgeDensity, int rangeMin, int rangeMax) 
 	srand(static_cast<int>(time(NULL))); // set a random seed for generating edges throughout the graph
 	for (vector<Node*>::iterator it1 = nodes.begin(); it1 != nodes.end(); ++it1) {
 		for (vector<Node*>::iterator it2 = nodes.begin(); it2 != nodes.end(); ++it2) {
-			// Compares the edge density to a randomly generated double between 0 and 1.
-			// bHasEdge should be true approximately n percent of times, where n is edgeDensity as a value between 0 and 1.
 
-			bool bHasEdge = ((rand() % 100) / 100.0 <= edgeDensity ? true : false);
-			if (bHasEdge) {
-				int edgeWeight = rand() % (((rangeMax + 1) - rangeMin)) + rangeMin; // generate a randome number between the minimum and maximum range
+			// If the iterators point to the same Node, then don't add any edges.
+			if ((*it1) != (*it2)) {
+				// Compares the edge density to a randomly generated double between 0 and 1.
+				// bHasEdge should be true approximately n percent of times, where n is edgeDensity as a value between 0 and 1.
+				bool bHasEdge = ((rand() % 100) / 100.0 <= edgeDensity ? true : false);
+				if (bHasEdge) {
+					int edgeWeight = rand() % (((rangeMax + 1) - rangeMin)) + rangeMin; // generate a randome number between the minimum and maximum range
 
-																					// Add an undirected edge for both nodes towards oneanother
-																					// If the Edge already exists, then no new Edge is added 
-				(*it1)->AddEdge((*it2), edgeWeight);
-				(*it2)->AddEdge((*it1), edgeWeight);
+					// Add an undirected edge for both nodes towards oneanother
+					// If the Edge already exists, then no new Edge is added. 
+					(*it1)->AddEdge((*it2), edgeWeight);
+					(*it2)->AddEdge((*it1), edgeWeight);
+				}
+
+				//vector< pair<int, int> > newVector = (*it1)->GetAllNeighboursIndicesAndWeight();
+				//if (newVector.size() > 0)
+				//	cout <<   "Node ID = " << newVector[0].first << ". Weight = " << newVector[0].second << endl;
 			}
-
-			//vector< pair<int, int> > newVector = (*it1)->GetAllNeighboursIndicesAndWeight();
-			//if (newVector.size() > 0)
-			//	cout <<   "Node ID = " << newVector[0].first << ". Weight = " << newVector[0].second << endl;
 		}
 	}
 }
@@ -79,6 +82,8 @@ void Graph::PrintGraphData() {
 	cout << "================================" << endl;
 	// TODO: provide prompt to calculate shortest path?
 }
+
+
 
 // Prints a line to separate sections of the output stream. Also has the option to display a title message below.
 void Graph::PrintDivideLineAndTitle(string stringToPrint) {
