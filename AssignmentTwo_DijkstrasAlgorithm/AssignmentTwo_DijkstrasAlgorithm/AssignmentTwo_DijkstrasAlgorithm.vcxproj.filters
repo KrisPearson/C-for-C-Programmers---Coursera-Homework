@@ -27,10 +27,10 @@
     <ClInclude Include="Graph.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ShortestPath.h">
+    <ClInclude Include="DijkstrasPath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Heap.h">
+    <ClInclude Include="Simulator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -44,10 +44,10 @@
     <ClCompile Include="Graph.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ShortestPath.cpp">
+    <ClCompile Include="DijkstrasPath.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Heap.cpp">
+    <ClCompile Include="Simulator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,5 +1,8 @@
-﻿  ShortestPath.cpp
-s:\github\c++forc_courserahomework\c-for-c-programmers---coursera-homework\assignmenttwo_dijkstrasalgorithm\assignmenttwo_dijkstrasalgorithm\graph.h(30): warning C4099: 'Node': type name first seen using 'struct' now seen using 'class'
-  s:\github\c++forc_courserahomework\c-for-c-programmers---coursera-homework\assignmenttwo_dijkstrasalgorithm\assignmenttwo_dijkstrasalgorithm\graph.h(15): note: see declaration of 'Node'
-s:\github\c++forc_courserahomework\c-for-c-programmers---coursera-homework\assignmenttwo_dijkstrasalgorithm\assignmenttwo_dijkstrasalgorithm\shortestpath.cpp(260): warning C4018: '<': signed/unsigned mismatch
+﻿  Graph.cpp
+  AssignmentTwo_DijkstrasAlgorithm.cpp
+  Generating Code...
+  Compiling...
+  Simulator.cpp
+  DijkstrasPath.cpp
+  Generating Code...
   AssignmentTwo_DijkstrasAlgorithm.vcxproj -> S:\GitHub\C++forC_CourseraHomework\C-for-C-Programmers---Coursera-Homework\AssignmentTwo_DijkstrasAlgorithm\Debug\AssignmentTwo_DijkstrasAlgorithm.exe

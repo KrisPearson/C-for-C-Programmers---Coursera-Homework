@@ -6,6 +6,8 @@
 #include <vector>
 #include <map>
 
+#include <queue>
+
 #include <iostream> // TODO: remove me
 
 using namespace std;
@@ -69,8 +71,6 @@ vector< int >  ShortestPath::FindShortestPath(const Graph & graph, int startNode
 	// Unexplored Nodes
 	Heap<Node*> openSet(graphSize);
 
-	int breakPoint = 0;
-
 
 	for (int i = 0; i < graphSize; i++) {
 		Node* tempNodeRef = graph.GetNodeByIndex(i);
@@ -78,14 +78,17 @@ vector< int >  ShortestPath::FindShortestPath(const Graph & graph, int startNode
 		// If a Node is found to have zero Edges, then skip it as it is unreachable.
 		if (tempNodeRef->GetEdgeCount() <= 0) continue; 
 		
-		distancesMap[tempNodeRef] = INF; // Assign the distance from the start Node to all over Nodes as infinity
-		predecessorNodeMap[tempNodeRef] = nullptr; // Initially, no Node has any parent/predecessor
+		distancesMap[tempNodeRef] = INT_MAX; // Assign the distance from the start Node to all over Nodes as infinity
+
+		//predecessorNodeMap[tempNodeRef] = nullptr; // Initially, no Node has any parent/predecessor
 		//unexploredNodes[i] = tempNodeRef; // Add all unexplored nodes to 
-		openSet.Add(tempNodeRef); // TODO: consider do we want to fill open set now?
+		//openSet.Add(tempNodeRef); // TODO: consider do we want to fill open set now?
 	}
 
+	openSet.Add(startNode); 
 
-	openSet.Add(startNode); // temp?!
+	//
+	predecessorNodeMap.insert({ startNode, nullptr });
 
 	// Set the distance from the startNode to the StartNode to zero.
 	distancesMap[startNode] = 0;
@@ -100,32 +103,59 @@ vector< int >  ShortestPath::FindShortestPath(const Graph & graph, int startNode
 		//sort(unexploredNodes.begin(), unexploredNodes.end(), CompareNodes(distancesMap) );
 		//need to sort unexplored nodes by values in distanceMap
 
-		Node* currentNode = openSet.RemoveFirst(); // BUG: current node is nullptr
-		if (currentNode == nullptr) { break;  }
+		Node* currentNode = openSet.RemoveFirst();
+		std::cout << "openset size = " << openSet.GetCurrentItemCount() << endl;
 
+		if (currentNode == nullptr) { break; }
+
+
+		cout << "-----------------------------------" << endl;
+		cout << "Current Node index = " << currentNode->GetIndex() << endl;
+		cout << "-----------------------------------" << endl;
 
 
 		if (currentNode == targetNode) {
 			//pathSuccess = true;
 			cout << "Path Search Succeeded" << endl;
+			cout << "Distance from start = " << distancesMap[currentNode] << endl;
+			cout << " Target's parent Node = " << predecessorNodeMap[targetNode] << " - " << distancesMap[predecessorNodeMap[targetNode]] << endl; // ISSUE HERE distance is apparently 1 from start to target's parent?
+																	// could possible just record the nodes, and use the node reference to get the distance. (predecessorMap)
 			break;
 		}
-		if (breakPoint > graphSize) {
-			cout << "Path Search Failed" << endl;
-			break;  // fail path search
-		}
 
-		vector< pair<const Node*, int> > neighbours = currentNode->GetAllNeighbours();
+		predecessorNodeMap.insert({ currentNode, nullptr } );
 
-		for (vector<pair<const Node*, int> >::iterator edgeIt = neighbours.begin(); edgeIt != neighbours.end(); ++edgeIt) {
-			int tempDist = distancesMap[currentNode] + edgeIt->second;
-			
-			if (tempDist < distancesMap[ edgeIt->first ] ) {
+		vector< pair< Node*, int> > neighbours = currentNode->GetAllNeighbours();
+
+		for (vector<pair<Node*, int> >::iterator edgeIt = neighbours.begin(); edgeIt != neighbours.end(); ++edgeIt) {
+
+			if (predecessorNodeMap.find(edgeIt->first) != predecessorNodeMap.end()) {
+				cout << "Node " << edgeIt->first <<" in closed list. Skipped. " << endl;
+				continue;
+			}
+
+			int tempDist = distancesMap[currentNode] + edgeIt->second; // cost to the current node from the start plus the edge weight
+
+			cout << "edgeIt Node index = " << edgeIt->first->GetIndex() << ". edgeIt Weight = " << edgeIt->second << endl;
+			cout << "distance to current node from start = " << distancesMap[currentNode] << ". plus distance along current edge = " << tempDist << endl;
+
+			if (tempDist < distancesMap[edgeIt->first] || !openSet.Contains(edgeIt->first) ) {
 				distancesMap[edgeIt->first] = tempDist;
-				predecessorNodeMap[edgeIt->first] = currentNode;
+				predecessorNodeMap[edgeIt->first] = currentNode; // neighbour's parent = current node
+
+
+
+
+				// Add the node to the open set, if it is not already added
+				if (!openSet.Contains(edgeIt->first)) {
+						cout << "Add Node index " << edgeIt->first->GetIndex() << " Node Address = " << edgeIt->first << endl;
+						openSet.Add(edgeIt->first);
+					}
+				//else openSet.UpdateItem(edgeIt->first);
+			//	}
 			}
 			/*
-			if (closedSet.Contains(neighbour)) {  // Ignore/skip nodes in closed set
+			if (predecessorNodeMap.Contains(neighbour)) {  // Ignore/skip nodes in closed set
 				continue;
 			}
 
@@ -141,12 +171,35 @@ vector< int >  ShortestPath::FindShortestPath(const Graph & graph, int startNode
 			}
 			*/
 		}
-
+		std::cout << "End while loop openset size = " << openSet.GetCurrentItemCount() << endl;
+		cout << endl << endl;
 	}
 
+	cout << "Path Search Loop Ended" << endl;
 
 
+	//TODO: RetracePath() and make a proper return value from pred node map
+	vector<int> tempReturnVector;
 
+	//for (int i = 0; i < predecessorNodeMap.size(); i++) {
+	//Node* n = predecessorNodeMap.
+	//tempReturnVector.push_back([i]->Get);
+	// }
+
+
+	//openSet.RemoveFirst();
+
+
+	//Node* c;
+	//Implementation<Node*> i;
+
+	//i.index;
+
+	//i.func(c);
+
+
+	return vector<int>();
+}
 
 
 	/*
@@ -254,15 +307,6 @@ vector< int >  ShortestPath::FindShortestPath(const Graph & graph, int startNode
 	*/
 
 
-	//TODO: RetracePath() and make a proper return value from pred node map
-vector<int> tempReturnVector;
 
-for (int i = 0; i < predecessorNodeMap.size(); i++) {
-	//Node* n = predecessorNodeMap.
-	//tempReturnVector.push_back([i]->Get);
- }
-
-	return vector<int>();
-}
 
 

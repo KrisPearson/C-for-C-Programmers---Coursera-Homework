@@ -6,32 +6,17 @@
 
 using namespace std;
 
-// Used to prevent large numbers of Nodes consuming too much memory
-const int MAX_NODE_COUNT = 500;
-
-const int INF = 9999;
-
-// forward declare the Node type
 struct Node;
 
 struct Edge {
 public:
-	/*
-	Edge(Node* startNode, Node* endNode, int edgeWeight) {
-	this->startNode = startNode;
-	this->endNode = endNode;
-	this->edgeWeight = edgeWeight;
-	}
-	*/
+	Edge(Node* startNode, Node* endNode, int edgeWeight) :startNode(startNode), endNode(endNode), edgeWeight(edgeWeight) {}
 
-
-	Edge(const Node* startNode, const Node* endNode, int edgeWeight) :startNode(startNode), endNode(endNode), edgeWeight(edgeWeight) {}
-
-	inline const class Node* GetEndNode() { return endNode; }
+	inline struct Node* GetEndNode() { return endNode; }
 	
-	inline const int GetEndNodeIndex();
+	inline int GetEndNodeIndex();
 
-	inline const int GetEdgeWeight() { return edgeWeight; }
+	inline int GetEdgeWeight() { return edgeWeight; }
 
 	// Overload the == operator for comparing Edge structs for equality
 	// Notice, we don't compare the weight. This is because no two edges should point between the same two Nodes, so the weight neeed not be considered.
@@ -43,14 +28,16 @@ public:
 private:
 
 	// the Node at which this edge starts and ends respectively (i.e the direction of the edge)
-	const Node *startNode; // TODO: consider is this necessary? As the Edge is stored inside of the Node it is pointing to.
-	const Node *endNode;
+	Node *startNode; // TODO: consider is this necessary? As the Edge is stored inside of the Node it is pointing to.
+	Node *endNode;
 
 	//the cost to travel between nodes along this edge
 	int edgeWeight;
 
 };
 
+
+// Node elements make up the graph. They contain Edge information, as well
 struct Node {
 public:
 
@@ -58,9 +45,19 @@ public:
 
 	inline int GetNumberOfEdges() { return adjecentEdges.size(); }
 
+	int GetEdgeWeight(Node* endNode) {
+		if (CheckForEdge(endNode)) {
+
+		}
+		else return 0;
+	}
+
+	// Returns the index value of this node
+	inline const int GetIndex() const { return index; }
+
 	// If one deoes not exists, then adds an Edge pointing from the fromNode to the toNode, with a given weight value.
 	// will return true if an edge did not already exist, and so was added. False if an edge already existed.
-	bool AddEdge(const Node* toNode, const int edgeWeight) {
+	bool AddEdge(Node* toNode, const int edgeWeight) {
 		if (CheckForEdge(toNode)) {
 			return false; // Edge not added, as one already existed
 		}
@@ -78,17 +75,11 @@ public:
 
 	// If an Edge exists between the fromNode and toNode, then remove it.
 	// True will be returned if an Edge was found and deleted, otherwise false will be returned.
-	bool DeleteEdge(const Node* toNode) {
+	bool DeleteEdge(Node* toNode) {
 		int edgeIndex = 0;
 		if (CheckForEdge(toNode, &edgeIndex)) {
-
 			// use the edgeIndex to erase the element containing the Edge
 			adjecentEdges.erase(adjecentEdges.begin() + edgeIndex);
-
-			//Search for the edgeusing an iterator, caching said iterator.
-			//vector<Edge>::iterator newEnd = std::remove(adjecentEdges.begin(), adjecentEdges.end(), Edge(this, toNode, 0));
-			//adjecentEdges.erase(newEnd, adjecentEdges.end());
-
 		}
 		else return false;
 	}
@@ -97,7 +88,7 @@ public:
 
 	// Compares this node and the toNode to see if an edge exists between them. If so, then returns true.
 	// An integer can be provided to the edgeIndex pointer in order to obtain the index of a found element, if such an element is found
-	inline bool CheckForEdge(const Node* toNode, int *edgeIndex = nullptr) {
+	inline bool CheckForEdge(Node* toNode, int *edgeIndex = nullptr) {
 		vector<Edge>::iterator edgeIt = std::find(adjecentEdges.begin(), adjecentEdges.end(), Edge(this, toNode, 0));
 		if (edgeIt == adjecentEdges.end()) {
 			return false; 	// Edge not in vector
@@ -111,35 +102,15 @@ public:
 		}
 	}
 
-	int GetEdgeWeight(const Node* endNode) {
-		if (CheckForEdge(endNode)) {
-
-		}
-		else return 0; // TODO: consider - could return an unreasonably large number here?
-	}
-
 	// Returns a vector of pairs containing the index ID of the neighbour on the graph and the weight of the edge in that order
 	// This ID can then be used to access the neighbouring Node and its values.
 	vector< pair<int, int> > GetAllNeighboursIndicesAndWeight() {
-		vector< pair<int, int> > returnVector(0);
+		vector< pair<int, int> > returnVector;
 		for (vector<Edge>::iterator edgeIt = adjecentEdges.begin(); edgeIt != adjecentEdges.end(); ++edgeIt) {
 			returnVector.push_back(make_pair(edgeIt->GetEndNodeIndex(), edgeIt->GetEdgeWeight()));
 		}
 		return returnVector;
 	}
-
-	vector< pair<const Node*, int> > GetAllNeighbours() {
-		vector< pair<const Node*, int> > returnVector(0);
-		for (vector<Edge>::iterator edgeIt = adjecentEdges.begin(); edgeIt != adjecentEdges.end(); ++edgeIt) {
-			returnVector.push_back(make_pair(edgeIt->GetEndNode(), edgeIt->GetEdgeWeight()));
-
-		}
-		return returnVector;
-	}
-
-	// Returns the index value of this node
-	inline const int GetIndex() const { return index; }
-
 
 
 private:
@@ -148,13 +119,12 @@ private:
 
 	// stores all Edges associated with this Node
 	vector<Edge> adjecentEdges;
-	//std::vector<std::pair<int, int>, int> edges;
 
 };
 
 class Graph {
 public:
-	Graph(int numberOfNodes = 50, double edgeDensity = 0.1f, int rangeMin = 1, int rangeMax = 8);
+	Graph(string graphName = "", int numberOfNodes = 50, double edgeDensity = 0.1f, int rangeMin = 1, int rangeMax = 8);
 	~Graph();
 
 	inline int GetSize()  const { return nodes.size(); }
@@ -165,6 +135,10 @@ public:
 	int GetEdgeValue(int n1, int n2) { return nodes[n1]->GetEdgeWeight(nodes[n2]); };
 	int GetEdgeValue(Node* n1, Node* n2) { return n1->GetEdgeWeight(n2); }
 
+	void PopulateAdjecencyList(std::vector < std::pair<int, int> > * adjacencyList);
+
+	void SetAverageShortestPath(double newAverage) { averageShortestPath = newAverage; }
+
 
 #pragma region Print Functions
 
@@ -174,16 +148,21 @@ public:
 	// Prints the adjecency matrix for this Graph, showing the existence of edges between nodes 
 	void PrintAdjecencyMatrix();
 
+	// Prints information about this graph
 	void PrintGraphData();
 
 #pragma endregion
 
 private:
 
+	// The name displayed for this graph
+	string graphName;
+
+	double averageShortestPath;
 
 	//Performs the density equation D = (E) / (V(V -1))
 	float CalculateGraphDensity() {
-		float density = (2.f *static_cast<float>(GetNumberOfEdges()) / 2.f)
+		float density = (/*2.f * */static_cast<float>(GetNumberOfEdges()) / 2.f)
 			/ (static_cast<float>(nodes.size()) * (static_cast<float>(nodes.size()) - 1.f)
 				);
 		return density;

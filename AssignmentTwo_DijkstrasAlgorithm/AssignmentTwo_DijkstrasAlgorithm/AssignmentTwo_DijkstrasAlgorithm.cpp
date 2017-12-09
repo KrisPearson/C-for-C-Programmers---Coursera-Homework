@@ -1,48 +1,47 @@
-// AssignmentTwo_DijkstrasAlgorithm.cpp : Defines the entry point for the console application.
+// C++ for C Programmers, Part A
+// Homework 2 - Implement Dijkstra's Algorithm
 //
+// Description:This program runs repeated path finding simulations on  randomly generated graphs and finds the average shortest path
+// Author: Kristian Pearson
+// Date: 09/12/2017
 
 #include "stdafx.h"
+#include "Simulator.h"
+#include "DijkstrasPath.h"
 #include <iostream>
-#include "Graph.h"
-#include "ShortestPath.h"
 
 using namespace std;
 
-const int NUMBER_OF_NODES = 10;
-
 int main() {
 
-	/*
-	TODO:
-	1. Generate UNDIRECTED graph - randomly generated set of edges with posative distance values
-	2. The random graph procedure should have edge density as a parameter and distance range as a parameter. So a graph whose density is 0.1 would have 10% of its edges picked at random and its edge distance would be selected at random from the distance range.
-	3. 
-	4. In an instance where there is no path between 1 and n, omit that value from the average. This should be very rare for the chosen density and size in this homework
-	5. Output an average shortest path length calculated for a graph with .4 density and .2 density
-	*/
+	// declare and define some value sfor graph generation
+	// One could permit this data to be input by the user instead, but for the sake of rapid testing, it has been predefined.
+	const int numOfNodes = 50;
+	double graphDensity = 0.2;
+	const int rangeMin = 1;
+	const int rangeMax = 10;
+	const int numOfLoops = 10;
 
-	double edgeDensityInput;
+	string simName = "20% Graph";
+	Simulator sim2(simName, numOfNodes, graphDensity, rangeMin, rangeMax, numOfLoops);
+	sim2.SimulateGraph();
 
-	cout << "Please define the edge density for the graph: ";
-	cin >> edgeDensityInput;
+	cout << "Press any key to run second simulation..." << endl;
+	cin.ignore();
 
-	Graph graphData(NUMBER_OF_NODES, edgeDensityInput, 1, 5);
+	simName = "40% Graph";
+	graphDensity = 0.4;
+	Simulator sim4(simName, numOfNodes, graphDensity, rangeMin, rangeMax, numOfLoops);
+	sim4.SimulateGraph();
 
-	graphData.PrintAdjecencyMatrix();
-	graphData.PrintGraphData();
-
-	ShortestPath path = ShortestPath();
-
-	vector<int> shortestPath = path.FindShortestPath(graphData, 0, 5);
-	for (int i = 0; i < shortestPath.size(); i++) {
-		cout << shortestPath[i];
-	}
-
-	int n;
-	cin>>n;
+	cin.ignore();
 
     return 0;
 }
+
+
+
+
 
 
 
