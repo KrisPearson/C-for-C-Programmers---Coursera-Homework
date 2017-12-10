@@ -43,74 +43,27 @@ public:
 
 	Node(int index) :index(index) {}
 
+	// Returns the number of Edges leading from this Node
 	inline int GetNumberOfEdges() { return adjecentEdges.size(); }
-
-	int GetEdgeWeight(Node* endNode) {
-		if (CheckForEdge(endNode)) {
-
-		}
-		else return 0;
-	}
 
 	// Returns the index value of this node
 	inline const int GetIndex() const { return index; }
 
 	// If one deoes not exists, then adds an Edge pointing from the fromNode to the toNode, with a given weight value.
 	// will return true if an edge did not already exist, and so was added. False if an edge already existed.
-	bool AddEdge(Node* toNode, const int edgeWeight) {
-		if (CheckForEdge(toNode)) {
-			return false; // Edge not added, as one already existed
-		}
-		else {
-			Edge newEdge(this, toNode, edgeWeight);
-			adjecentEdges.push_back(newEdge);
-
-			int edgeIndexTest = 0;
-
-			CheckForEdge(toNode, &edgeIndexTest);
-
-			return true; // Edge added
-		}
-	};
+	bool AddEdge(Node* toNode, const int edgeWeight);
 
 	// If an Edge exists between the fromNode and toNode, then remove it.
 	// True will be returned if an Edge was found and deleted, otherwise false will be returned.
-	bool DeleteEdge(Node* toNode) {
-		int edgeIndex = 0;
-		if (CheckForEdge(toNode, &edgeIndex)) {
-			// use the edgeIndex to erase the element containing the Edge
-			adjecentEdges.erase(adjecentEdges.begin() + edgeIndex);
-		}
-		else return false;
-	}
-
-	inline int GetEdgeCount() { return adjecentEdges.size(); }
+	bool DeleteEdge(Node* toNode);
 
 	// Compares this node and the toNode to see if an edge exists between them. If so, then returns true.
 	// An integer can be provided to the edgeIndex pointer in order to obtain the index of a found element, if such an element is found
-	inline bool CheckForEdge(Node* toNode, int *edgeIndex = nullptr) {
-		vector<Edge>::iterator edgeIt = std::find(adjecentEdges.begin(), adjecentEdges.end(), Edge(this, toNode, 0));
-		if (edgeIt == adjecentEdges.end()) {
-			return false; 	// Edge not in vector
-		}
-		else {
-			// if edgeIndex has been specified, then assign the index of the located element to it.
-			if (edgeIndex != nullptr) {
-				*edgeIndex = std::distance(adjecentEdges.begin(), edgeIt);
-			}
-			return true;
-		}
-	}
+	inline bool CheckForEdge(Node* toNode, int *edgeIndex = nullptr);
 
 	// Returns a vector of pairs containing the index ID of the neighbour on the graph and the weight of the edge in that order
 	// This ID can then be used to access the neighbouring Node and its values.
-	vector< pair<int, int> > GetAllNeighboursIndicesAndWeight() {
-		vector< pair<int, int> > returnVector;
-		for (vector<Edge>::iterator edgeIt = adjecentEdges.begin(); edgeIt != adjecentEdges.end(); ++edgeIt) {
-			returnVector.push_back(make_pair(edgeIt->GetEndNodeIndex(), edgeIt->GetEdgeWeight()));
-		}
-		return returnVector;
-	}
+	vector< pair<int, int> > GetAllNeighboursIndicesAndWeight();
 
 private:
 	// The index value asociated with this node

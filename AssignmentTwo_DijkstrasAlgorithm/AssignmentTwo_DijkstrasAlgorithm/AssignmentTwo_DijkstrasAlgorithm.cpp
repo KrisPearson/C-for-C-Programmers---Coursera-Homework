@@ -23,7 +23,7 @@ int main() {
 	const int numOfLoops = 10;
 
 	string simName = "20% Graph";
-	Simulator sim2(simName, numOfNodes, graphDensity, rangeMin, rangeMax, numOfLoops);
+	const Simulator sim2(simName, numOfNodes, graphDensity, rangeMin, rangeMax, numOfLoops);
 	sim2.SimulateGraph();
 
 	cout << "Press any key to run second simulation..." << endl;
@@ -31,7 +31,7 @@ int main() {
 
 	simName = "40% Graph";
 	graphDensity = 0.4;
-	Simulator sim4(simName, numOfNodes, graphDensity, rangeMin, rangeMax, numOfLoops);
+	const Simulator sim4(simName, numOfNodes, graphDensity, rangeMin, rangeMax, numOfLoops);
 	sim4.SimulateGraph();
 
 	cin.ignore();

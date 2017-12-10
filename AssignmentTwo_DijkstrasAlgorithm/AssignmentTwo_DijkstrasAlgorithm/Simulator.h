@@ -17,7 +17,7 @@ public:
 ~Simulator() {};
 
 // simulates graph generation and path finding n number of times before returning an average path length
-void SimulateGraph();
+void SimulateGraph() const;
 
 	private:
 		std::string simName;

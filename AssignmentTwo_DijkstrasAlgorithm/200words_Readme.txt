@@ -21,6 +21,9 @@ http://www.cplusplus.com/forum/general/124853/
 TheHappieCat: How to Do PATHFINDING: Dijkstra's Algorithm
 https://www.youtube.com/watch?v=LDCa4U-ZbJ0
 
+Shreyans Sheth: Answer on Quora 
+https://www.quora.com/What-is-the-most-simple-efficient-C++-code-for-Dijkstras-shortest-path-algorithm
+
 Erik Hazzard: Dijkstra's Algorithm - Shortest Path
 http://vasir.net/blog/game_development/dijkstras_algorithm_shortest_path
 
