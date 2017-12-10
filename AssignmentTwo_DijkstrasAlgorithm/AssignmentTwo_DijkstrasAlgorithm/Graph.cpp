@@ -56,6 +56,7 @@ Graph::~Graph() {
 }
 
 // Prints the adjecency matrix for this Graph, showing the existence of edges between nodes 
+// Primarily used for debugging purpo
 void Graph::PrintAdjecencyMatrix() {
 	PrintDivideLineAndTitle(" Adjecency Matrix ");
 
@@ -88,6 +89,7 @@ void Graph::PrintGraphData() {
 
 // Populates the Adjecency list passed as a parameter.
 // This array contains the neighbours for each node, along with the weight of the edge between the two nodes.
+// A list is used as it complements the way Edges are stored within Nodes, allowing itteration through edges via their owning Node
 void Graph::PopulateAdjecencyList(std::vector<std::pair<int, int>>* adjacencyList) {
 	// for each node, get the neighbours and add them to the Adjecency List
 	for (int n = 0; n < GetSize(); n++) { // for each node	

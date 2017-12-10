@@ -2,7 +2,7 @@
 #include <vector>
 #include <algorithm> 
 #include <iterator>
-#include <iostream> // temp
+
 
 using namespace std;
 
@@ -27,7 +27,7 @@ public:
 
 private:
 
-	// the Node at which this edge starts and ends respectively (i.e the direction of the edge)
+	// the Nodes at which this edge starts and ends respectively (i.e the direction of the edge)
 	Node *startNode; // TODO: consider is this necessary? As the Edge is stored inside of the Node it is pointing to.
 	Node *endNode;
 
@@ -112,14 +112,12 @@ public:
 		return returnVector;
 	}
 
-
 private:
-	// the index value asociated with this node
+	// The index value asociated with this node
 	const int index;
 
 	// stores all Edges associated with this Node
 	vector<Edge> adjecentEdges;
-
 };
 
 class Graph {
@@ -127,16 +125,18 @@ public:
 	Graph(string graphName = "", int numberOfNodes = 50, double edgeDensity = 0.1f, int rangeMin = 1, int rangeMax = 8);
 	~Graph();
 
+	// Returns the number of nodes in the graph
 	inline int GetSize()  const { return nodes.size(); }
 
+	// For retrieving individual, specific nodes
 	inline Node* GetNodeByIndex(const int index) const { return nodes[index]; }
 
-	// Returns the edge weight between the nodes
-	int GetEdgeValue(int n1, int n2) { return nodes[n1]->GetEdgeWeight(nodes[n2]); };
-	int GetEdgeValue(Node* n1, Node* n2) { return n1->GetEdgeWeight(n2); }
-
+	// Populates the Adjecency list passed as a parameter.
+	// This array contains the neighbours for each node, along with the weight of the edge between the two nodes.
+	// A list is used as it complements the way Edges are stored within Nodes, allowing itteration through edges via their owning Node
 	void PopulateAdjecencyList(std::vector < std::pair<int, int> > * adjacencyList);
 
+	// Records the average path length for this graph.
 	void SetAverageShortestPath(double newAverage) { averageShortestPath = newAverage; }
 
 
@@ -146,6 +146,7 @@ public:
 	void PrintDivideLineAndTitle(string stringToPrint = "");
 
 	// Prints the adjecency matrix for this Graph, showing the existence of edges between nodes 
+	// Primarily used for debugging purposes
 	void PrintAdjecencyMatrix();
 
 	// Prints information about this graph
@@ -158,6 +159,7 @@ private:
 	// The name displayed for this graph
 	string graphName;
 
+	// The calculated average shortest path for this graph. Only used to record the value, and does not affect functionality.
 	double averageShortestPath;
 
 	//Performs the density equation D = (E) / (V(V -1))

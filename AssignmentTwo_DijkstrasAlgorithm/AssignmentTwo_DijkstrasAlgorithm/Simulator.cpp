@@ -2,6 +2,7 @@
 #include "Simulator.h"
 #include "Graph.h"
 #include "DijkstrasPath.h"
+#include <iostream>
 
 using namespace std;
 
